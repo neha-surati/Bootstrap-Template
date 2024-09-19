@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Container, Form, Button, Row, Col, Table } from "react-bootstrap";
+
 import {
   BsEmojiAngryFill,
   BsEmojiFrownFill,
@@ -11,6 +13,7 @@ import {
 const FeedbackForm = () => {
   let [user, setUser] = useState({});
   const [submittedData, setSubmittedData] = useState([]);
+  let [index, setIndex] = useState(-1);
   let [newcolor, setNewColor] = useState(0);
   let [newcolor2, setNewColor2] = useState(0);
 
@@ -22,18 +25,52 @@ const FeedbackForm = () => {
     5: <BsEmojiLaughingFill color="green" fontSize="25px" />,
   };
 
+  useEffect(()=>{
+    let oldData=JSON.parse(localStorage.getItem("User"));
+    setSubmittedData(oldData);
+
+  },[])
+
   let handleInput = (e) => {
     let { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmittedData([...submittedData, user]);
+   let newData;
+   if(index != -1){
+    submittedData[index]=user;
+    newData=[...submittedData];
+    setIndex(-1);
+   }
+    else{
+    newData=[...submittedData,user];
+    }
+    setSubmittedData(newData);
+    localStorage.setItem("User",JSON.stringify(newData));
     setUser({});
     setNewColor(0);
     setNewColor2(0);
+   }
+   let deletData = (pos) => {
+    let oldData = JSON.parse(localStorage.getItem("User"));
+    oldData.splice(pos, 1);
+    localStorage.setItem("User", JSON.stringify(oldData));
+    setSubmittedData(oldData);
+   
   };
+
+  let editData = (pos) => {
+    let editUser = submittedData[pos];
+    setUser(editUser);
+    setNewColor(editUser.registrationEmoji); 
+    setNewColor2(editUser.navigationEmoji);  
+    setIndex(pos);  
+  };
+
+  
 
   let emoji = (val) => {
     setNewColor(val);
@@ -230,6 +267,7 @@ const FeedbackForm = () => {
             <th>Registration Rating</th>
             <th>Navigation Rating</th>
             <th>Feedback</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -244,6 +282,8 @@ const FeedbackForm = () => {
               <td>{emojiMap[val.registrationEmoji]}</td>
               <td>{emojiMap[val.navigationEmoji]}</td>
               <td>{val.feedback}</td>
+              <td> <Button variant="primary" onClick={() => editData(index)}>Edit</Button>{' '} || <Button variant="danger" onClick={() => deletData(index)}>Delete</Button>{' '} </td>
+              
             </tr>
           ))}
         </tbody>
