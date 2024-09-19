@@ -88,7 +88,7 @@ const FeedbackForm = () => {
       <p>We would love to hear your thoughts about your registration experience.</p>
       <Form onSubmit={handleSubmit}>
         <Row>
-          <Col md={3}>
+          
             <Form.Group controlId="formFirstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
@@ -99,8 +99,8 @@ const FeedbackForm = () => {
                 onChange={(e) => handleInput(e)}
               />
             </Form.Group>
-          </Col>
-          <Col md={3}>
+       
+         
             <Form.Group controlId="formLastName">
               <Form.Label>Last Name</Form.Label>
               <Form.Control
@@ -111,7 +111,7 @@ const FeedbackForm = () => {
                 onChange={(e) => handleInput(e)}
               />
             </Form.Group>
-          </Col>
+       
         </Row>
 
         <Form.Group controlId="formEmail">
